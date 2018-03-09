@@ -1,0 +1,25 @@
+<launch>
+	
+	<!-- +++++++++Setup Interface+++++++++ -->
+
+	<remap from="camera" to="nao_robot/camera/top/camera/image_raw"/>
+	<node name="interface" pkg="interface" type="interface" output="screen" /> 
+	<node name="nao_wave" pkg="interface_ros_functions" type="wave_nao_right_hand" />
+
+	<!-- +++++++++Setup DQN+++++++++ -->
+	
+	<!--node name="action_selector" pkg="itbn_lfd" type="itbn_action_selector.py" output="screen" /-->
+	<node name="itbn_executor" pkg="itbn_lfd" type="itbn_executor_v2" output="screen" />
+
+	<!-- +++++++++Record+++++++++ -->
+	<node pkg="interface_ros_functions" name="data_logger" type="data_logger" output="screen">
+		<param name="rosbag_record_args" 
+		   value="--output-prefix=nao_asd_auto 
+				/action_finished 
+				/nao_robot/microphone/naoqi_microphone/audio_raw 
+				/nao_robot/camera/top/camera/image_raw 
+			"/>
+		<param name="bag_path" value="$(env HOME)/ITBN_bags_livetest"/>
+	</node>
+
+</launch>
